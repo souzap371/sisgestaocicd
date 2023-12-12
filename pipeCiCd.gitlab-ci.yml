@@ -1,0 +1,42 @@
+# Configurações de pipeline CI/CD
+
+stages:
+  - build
+  - test
+  - deploy
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+
+maven-build:
+  stage: build
+  script:
+    - mvn $MAVEN_CLI_OPTS clean install
+
+maven-test:
+  stage: test
+  script:
+    - mvn $MAVEN_CLI_OPTS test
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Deploy your application here"
+  only:
+    - master  # Ajustar à branch que irá ser vinculada
+
+  # Se for necessário configurar váviáveis de ambiente segue abaixo
+
+variables:
+  MAVEN_CLI_OPTS: "-s .m2/settings.xml --batch-mode"
+  DB_PASSWORD: "your_password"
+
+# Caso precise integração com Maven segue configurações
+
+before_script:
+  - mkdir -p $HOME/.m2
+  - echo "<settings><servers><server><id>your-maven-repo-id</id><username>$CI_JOB_TOKEN</username><password>$CI_JOB_TOKEN</password></server></servers></settings>" > $HOME/.m2/settings.xml
+
+
+
+
